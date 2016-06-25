@@ -1,0 +1,6 @@
+# adding Python to Windows %PATH%
+1. Start Menu -> Advanced System Settings
+2. Click Environment Variables.
+3. Append ;C:\python27 to the Path variable.
+4. Add a python2.exe if there isn't one inside of the python path
+5. Restart Command Prompt.
