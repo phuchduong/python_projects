@@ -1,7 +1,7 @@
-base_dir = 'F:\\xDocuments\\xOther'
-
 import os
 from rand_file import rand_file
+
+base_dir = 'F:\\xDocuments\\xOther'
 
 # Sets to the current folder path
 current_path = os.path.dirname(os.path.realpath(__file__))
