@@ -1,7 +1,7 @@
 import os
 from rand_file import rand_file
 
-base_dir = 'D:\\BT\\xOther'
+base_dir = 'K:\\IOmega\\bt2\\a'
 program = "C:\\Program Files\\Combined Community Codec Pack 64bit\\MPC\\mpc-hc64.exe"
 
 # Sets to the current folder path
