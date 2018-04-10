@@ -1,7 +1,7 @@
 import os
 from rand_file import rand_file
 
-base_dir = 'S:\\documentary\\recovery'
+base_dir = 'E:\\xOther\\Site\\Allure'
 program = "C:\\Program Files\\Combined Community Codec Pack 64bit\\MPC\\mpc-hc64.exe"
 
 # Sets to the current folder path
