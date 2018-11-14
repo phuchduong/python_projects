@@ -3,22 +3,24 @@ import pymysql  # conda install pymysql
 
 # Query a mysql table with a start and end id. Must be a numeric
 #   dat type.
-def mysql_query_rows_by_id_range(table_name, column_name, start, end):
+def query_table_by_id_range(table_name, column_name, beg, end):
     mysql_conn = get_mysql_creds()
     cur = mysql_conn.cursor()
     sql = '''
         SELECT
           *
-        FROM '<table_name>'
-        WHERE <column_name>
-            BETWEEN '<start>'
-                AND '<end>'
+        FROM <table_name>
+        WHERE
+            <pk_column_name>
+                BETWEEN <start>
+                    AND <end>
         ;
     '''
-    sql = sql.replace('<start>', str(start))
+    sql = sql.replace('<start>', str(beg))
     sql = sql.replace('<end>', str(end))
-    sql = sql.replace('<table_name>', table_name)
-    sql = sql.replace('<column_name>', column_name)
+    sql = sql.replace('<pk_column_name>', str(column_name))
+    sql = sql.replace('<table_name>', str(table_name))
+
     cur.execute(sql)
 
     cur.close()
