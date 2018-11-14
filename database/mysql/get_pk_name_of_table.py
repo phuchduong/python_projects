@@ -1,29 +1,27 @@
 import pymysql  # conda install pymysql
 
 
-# Query a mysql table with a start and end id. Must be a numeric
-#   dat type.
-def mysql_query_rows_by_id_range(table_name, column_name, start, end):
+# Get the pk column name of a mysql table, given the
+# table name.
+def get_pk_of_table(table_name):
     mysql_conn = get_mysql_creds()
     cur = mysql_conn.cursor()
     sql = '''
-        SELECT
-          *
-        FROM '<table_name>'
-        WHERE <column_name>
-            BETWEEN '<start>'
-                AND '<end>'
+        SELECT column_name
+        FROM information_schema.columns
+        WHERE table_schema = \'spear_reporting\'
+        AND table_name = \'<table_name>\'
+        AND column_key = \'PRI\'
         ;
     '''
-    sql = sql.replace('<start>', str(start))
-    sql = sql.replace('<end>', str(end))
-    sql = sql.replace('<table_name>', table_name)
-    sql = sql.replace('<column_name>', column_name)
+    sql = sql.replace('<table_name>', str(table_name))
     cur.execute(sql)
 
     cur.close()
     mysql_conn.close()
-    return cur
+    result = cur.fetchone()
+    pk_column_name = result[0]
+    return pk_column_name
 
 
 def get_mysql_creds():
