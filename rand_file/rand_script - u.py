@@ -1,7 +1,7 @@
 import os
 from rand_file import rand_file
 
-base_dir = 'V:\\ha_backup'
+base_dir = 'U:\\uBT\\'
 program = "C:\\Program Files (x86)\\K-Lite Codec Pack\\MPC-HC64\\mpc-hc64.exe"
 
 # Sets to the current folder path

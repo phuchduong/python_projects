@@ -1,8 +1,8 @@
 import os
 from rand_file import rand_file
 
-base_dir = 'E:\\Unreconciled\\xOther'
-program = "C:\\Program Files\\Combined Community Codec Pack 64bit\\MPC\\mpc-hc64.exe"
+base_dir = 'V:\\o_tBT'
+program = "C:\\Program Files (x86)\\K-Lite Codec Pack\\MPC-HC64\\mpc-hc64.exe"
 
 # Sets to the current folder path
 current_path = os.path.dirname(os.path.realpath(__file__))
@@ -21,5 +21,4 @@ def get_another_file(file_list):
     get_another_file(file_list)
 
 
-os.startfile('K:\\IOmega\\bt2')
 get_rand_file()

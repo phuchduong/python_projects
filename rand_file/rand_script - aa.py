@@ -1,7 +1,7 @@
 import os
 from rand_file import rand_file
 
-base_dir = 'V:\\ha_backup'
+base_dir = 'V:\\aa_backup'
 program = "C:\\Program Files (x86)\\K-Lite Codec Pack\\MPC-HC64\\mpc-hc64.exe"
 
 # Sets to the current folder path
@@ -19,6 +19,5 @@ def get_another_file(file_list):
     file_list.re_roll()
     input("Press Enter for another file...")
     get_another_file(file_list)
-
 
 get_rand_file()

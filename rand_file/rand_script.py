@@ -2,7 +2,7 @@ import os
 from rand_file import rand_file
 
 base_dir = 'E:\\Unreconciled\\xOther\\Site'
-program = "C:\\Program Files\\Combined Community Codec Pack 64bit\\MPC\\mpc-hc64.exe"
+program = "C:\\Program Files (x86)\\Combined Community Codec Pack\\MPC\\mpc-hc.exe"
 
 # Sets to the current folder path
 current_path = os.path.dirname(os.path.realpath(__file__))
