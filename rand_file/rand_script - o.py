@@ -1,7 +1,7 @@
 import os
-from rand_file import rand_file
+from rand_file import RandFile
 
-base_dir = 'V:\\o_tBT'
+base_dir = 'O:\\o_za'
 program = "C:\\Program Files (x86)\\K-Lite Codec Pack\\MPC-HC64\\mpc-hc64.exe"
 
 # Sets to the current folder path
@@ -9,8 +9,8 @@ current_path = os.path.dirname(os.path.realpath(__file__))
 os.chdir(current_path)
 
 
-def get_rand_file():
-    file_list = rand_file(base_dir, program)
+def get_RandFile():
+    file_list = RandFile(base_dir, program)
     input("Press Enter for another file...")
     get_another_file(file_list)
 
@@ -21,4 +21,4 @@ def get_another_file(file_list):
     get_another_file(file_list)
 
 
-get_rand_file()
+get_RandFile()

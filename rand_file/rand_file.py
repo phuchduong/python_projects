@@ -1,57 +1,96 @@
+# Author: phuchduong
+# GitHub: https://github.com/phuchduong
+# Date: March 11, 2026
+
 import random
-import os
 import subprocess
+from pathlib import Path
 
-
-class rand_file:
+class RandFile:
+    """
+    A utility to recursively scan a directory for video files and 
+    launch a random selection in a specified media player.
+    """
 
     def __init__(self, base_dir, program):
-        self.base_dir = base_dir
-        self.file_list = []
+        """
+        Initializes the RandFile instance, builds the file cache, and triggers an initial selection.
+        
+        Args:
+            base_dir (str/Path): The root directory to start scanning.
+            program (str): The executable path for the media player.
+        """
+        self.base_dir = Path(base_dir)
         self.program = program
+        self.file_list = []
 
         print("Building file list...")
         self.rbuild_file_list(self.base_dir)
-        print("File list complete...")
+        print(f"File list complete. {len(self.file_list)} files found.")
 
-        self.print_list()
-        print(str(len(self.file_list)) + " files in list...")
-
-        self.re_roll()
+        if self.file_list:
+            self.re_roll()
+        else:
+            print("No video files found in the specified directory.")
 
     def re_roll(self):
-        print("Picking a random file from the list...")
-        rand_file_str = random.choice(self.file_list)
-        rand_file = rand_file_str.encode('utf-8')
-        print(rand_file)
-        # Opens the file
-        file_path = self.base_dir + rand_file_str
-        subprocess.Popen([self.program, file_path])
+        """
+        Selects a random file from the internal list, launches it in the 
+        configured player, and highlights the file in Windows Explorer.
+        """
+        if not self.file_list:
+            return
 
-        parent_folder = os.path.dirname(file_path)
-        os.startfile(parent_folder)
+        print("Picking a random file...")
+        chosen_relative_path = random.choice(self.file_list)
+        
+        # Resolve to a fully qualified absolute path to avoid ambiguity
+        full_path = (self.base_dir / chosen_relative_path).resolve()
+        
+        print(f"Playing: {full_path}")
+
+        # Launch the media player as a background process
+        subprocess.Popen([self.program, str(full_path)])
+
+        # Open Windows Explorer and highlight the specific file
+        # Passing arguments as a list ensures spaces in filenames are handled correctly
+        subprocess.run(['explorer.exe', '/select,', str(full_path)])
 
     def rbuild_file_list(self, current_dir):
-        dir_list = os.listdir(current_dir)
-        for dir_name in dir_list:
-            file_root = current_dir + "\\" + dir_name
-            if os.path.isfile(file_root):
-                if is_video_file(dir_name):
-                    # asbsolute to relative pathing
-                    relative_file_path = file_root.replace(self.base_dir, "")
-                    self.file_list.append(relative_file_path)
-            elif os.path.isdir(file_root):
-                self.rbuild_file_list(file_root)
-            else:
-                print("Invalid file state: " + str(file_root))
+        """
+        Recursively traverses the directory tree to identify video files.
+        Checks for Windows MAX_PATH limitations during discovery.
+        
+        Args:
+            current_dir (Path): The current directory level being scanned.
+        """
+        # Standard Windows API limit for path strings
+        MAX_PATH_LENGTH = 260 
 
-    def print_list(self):
-        for item in self.file_list:
-            print(str(item))
+        for path in current_dir.rglob('*'):
+            if path.is_file() and is_video_file(path.name):
+                full_path_str = str(path.resolve())
+                path_len = len(full_path_str)
+
+                # Alert the user if a file path might cause issues with Windows APIs
+                if path_len > MAX_PATH_LENGTH:
+                    print(f"⚠️  ALERT: Path too long ({path_len} chars): {full_path_str}")
+                
+                # Store paths relative to base_dir to keep the list lightweight
+                self.file_list.append(path.relative_to(self.base_dir))
 
 
 def is_video_file(filename):
-    video_file_extensions = (
+    """
+    Determines if a file is a video based on its extension.
+    
+    Args:
+        filename (str): The name or path of the file to check.
+        
+    Returns:
+        bool: True if the extension matches the whitelist, False otherwise.
+    """
+    video_extensions = (
         '.264', '.3g2', '.3gp', '.3gp2', '.3gpp', '.3gpp2', '.3mm', '.3p2', '.60d', '.787', '.89', '.aaf', '.aec',
         '.aep', '.aepx', '.aet', '.aetx', '.ajp', '.ale', '.am', '.amc', '.amv', '.amx', '.anim', '.aqt', '.arcut',
         '.arf', '.asf', '.asx', '.avb', '.avc', '.avd', '.avi', '.avp', '.avs', '.avs', '.avv', '.axm', '.bdm',
@@ -84,5 +123,4 @@ def is_video_file(filename):
         '.wtv', '.wve', '.wvx', '.xej', '.xel', '.xesc', '.xfl', '.xlmv', '.xmv', '.xvid', '.y4m', '.yog', '.yuv', '.zeg',
         '.zm1', '.zm2', '.zm3', '.zmv')
 
-    if filename.lower().endswith((video_file_extensions)):
-        return True
+    return Path(filename).suffix.lower() in video_extensions
