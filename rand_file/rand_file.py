@@ -5,6 +5,7 @@
 import random
 import subprocess
 from pathlib import Path
+import time  # Add this to your imports at the top
 
 class RandFile:
     """
@@ -35,26 +36,27 @@ class RandFile:
 
     def re_roll(self):
         """
-        Selects a random file from the internal list, launches it in the 
-        configured player, and highlights the file in Windows Explorer.
+        Selects a random file, highlights it in Explorer, waits, then launches the video.
         """
         if not self.file_list:
             return
 
         print("Picking a random file...")
         chosen_relative_path = random.choice(self.file_list)
-        
-        # Resolve to a fully qualified absolute path to avoid ambiguity
         full_path = (self.base_dir / chosen_relative_path).resolve()
         
         print(f"Playing: {full_path}")
 
-        # Launch the media player as a background process
-        subprocess.Popen([self.program, str(full_path)])
+        # 1. Open Windows Explorer and highlight the file
+        # Use Popen here so it doesn't block the script execution
+        subprocess.Popen(['explorer.exe', '/select,', str(full_path)])
 
-        # Open Windows Explorer and highlight the specific file
-        # Passing arguments as a list ensures spaces in filenames are handled correctly
-        subprocess.run(['explorer.exe', '/select,', str(full_path)])
+        # 2. Brief pause to let Explorer finish stealing focus
+        # 0.5 seconds is usually enough for Windows to render the window
+        time.sleep(0.5)
+
+        # 3. Launch the media player (this will now be the most recent window)
+        subprocess.Popen([self.program, str(full_path)])
 
     def rbuild_file_list(self, current_dir):
         """
