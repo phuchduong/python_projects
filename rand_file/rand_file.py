@@ -52,8 +52,8 @@ class RandFile:
         subprocess.Popen(['explorer.exe', '/select,', str(full_path)])
 
         # 2. Brief pause to let Explorer finish stealing focus
-        # 0.5 seconds is usually enough for Windows to render the window
-        time.sleep(0.5)
+        # 1.0 seconds is usually enough for Windows to render the window
+        time.sleep(1.0)
 
         # 3. Launch the media player (this will now be the most recent window)
         subprocess.Popen([self.program, str(full_path)])
